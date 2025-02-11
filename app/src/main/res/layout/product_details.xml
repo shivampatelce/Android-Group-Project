@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".ProductDetailsActivity">
+
+    <ImageView
+        android:id="@+id/productImg"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        tools:srcCompat="@tools:sample/avatars" />
+
+    <TextView
+        android:id="@+id/productTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="8dp"
+        android:text="TextView"
+        android:textColor="@android:color/black"
+        android:textSize="18sp"
+        android:textStyle="bold" />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:padding="4dp">
+
+        <Button
+            android:id="@+id/decreaseQnt"
+            android:layout_width="80dp"
+            android:layout_height="50dp"
+            android:padding="0dp"
+            android:text="-"
+            android:textSize="24sp"
+            android:gravity="center" />
+
+        <EditText
+            android:id="@+id/quantity"
+            android:layout_width="80dp"
+            android:layout_height="50dp"
+            android:layout_marginHorizontal="8dp"
+            android:gravity="center"
+            android:textSize="14sp"
+            android:inputType="number"
+            android:focusable="false"
+            android:text="1"
+            android:background="@android:drawable/editbox_background" />
+
+        <Button
+            android:id="@+id/increaseQnt"
+            android:layout_width="80dp"
+            android:layout_height="50dp"
+            android:padding="0dp"
+            android:text="+"
+            android:textSize="24sp"
+            android:gravity="center" />
+
+        <ImageButton
+            android:id="@+id/addToCart"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:layout_marginHorizontal="8dp"
+            android:padding="0dp"
+            android:layout_weight="1"
+            android:background="@color/white"
+            app:srcCompat="@drawable/baseline_add_shopping_cart_24"
+            app:tint="#4CAF50" />
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/productDescription"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="4dp"
+        android:text="TextView"
+        android:textColor="@android:color/darker_gray"
+        android:textSize="14sp" />
+
+    <TextView
+        android:id="@+id/productPrice"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="8dp"
+        android:text="TextView"
+        android:textColor="@android:color/holo_red_dark"
+        android:textSize="16sp"
+        android:textStyle="bold" />
+
+</LinearLayout>

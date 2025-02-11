@@ -59,6 +59,7 @@ class CreateUserAddressActivity : AppCompatActivity() {
         }
 
         skipButton.setOnClickListener {
+            createAccount.address = listOf()
             intent = Intent(this, CreateUserPasswordActivity::class.java)
             intent.putExtra("createAccount", createAccount)
             startActivity(intent)
