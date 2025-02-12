@@ -3,12 +3,14 @@ package com.example.firebasegroupapp7
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageButton
 import android.widget.TextView
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.example.firebasegroupapp7.databinding.ProductDetailsBinding
@@ -35,6 +37,7 @@ class ProductDetailsActivity : AppCompatActivity() {
     private lateinit var incrementButton: Button
     private lateinit var decrementButton: Button
     private lateinit var addToCartButton: ImageButton
+    private lateinit var removeFromCartButton: ImageButton
     private var productId: Long? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -55,6 +58,7 @@ class ProductDetailsActivity : AppCompatActivity() {
         incrementButton = findViewById(R.id.increaseQnt)
         decrementButton = findViewById(R.id.decreaseQnt)
         addToCartButton = findViewById(R.id.addToCart)
+        removeFromCartButton = findViewById(R.id.removeFormCart)
 
         productId = intent.getLongExtra("productId", -1L)
 
@@ -77,6 +81,7 @@ class ProductDetailsActivity : AppCompatActivity() {
             quantity += 1;
             if (quantity <= 5) {
                 cartQuantity.setText(quantity.toString())
+                updateCartItem()
             }
         }
 
@@ -85,33 +90,63 @@ class ProductDetailsActivity : AppCompatActivity() {
             quantity -= 1
             if (quantity >= 1) {
                 cartQuantity.setText(quantity.toString())
+                updateCartItem()
             }
         }
 
         addToCartButton.setOnClickListener {
-            val pathString = "cart/" + user?.uid
+            updateCartItem()
+        }
 
-            database.reference.child(pathString).get()
-                .addOnSuccessListener { snapshot ->
-                    var cart: Cart? = null
-                    Log.i("data", snapshot.toString())
-                    val updatedQuantity: Int = cartQuantity.text.toString().toIntOrNull() ?: 0
-                    if (snapshot.exists()) {
-                        for (cartItemSnapshot in snapshot.children) {
-                            val existingCartItem = cartItemSnapshot.getValue(Cart::class.java)
-                            if (existingCartItem != null && existingCartItem.productId == productId) {
-                                cartItemSnapshot.ref.child("quantity").setValue(updatedQuantity)
-                            }
+        removeFromCartButton.setOnClickListener {
+            removeItemFromCart()
+        }
+    }
+
+    private fun removeItemFromCart() {
+        val pathString = "cart/" + user?.uid
+
+        database.reference.child(pathString).get()
+            .addOnSuccessListener { snapshot ->
+                for (cartItemSnapshot in snapshot.children) {
+                    val existingCartItem = cartItemSnapshot.getValue(Cart::class.java)
+                    if (existingCartItem != null && existingCartItem.productId == productId) {
+                        cartItemSnapshot.ref.removeValue().addOnSuccessListener {
+                            addToCartButton.visibility = View.VISIBLE
+                            removeFromCartButton.visibility = View.GONE
+                            cartQuantity.setText("1")
                         }
-                    } else {
-                        cart = Cart(productId!!, cartQuantity.text.toString().toIntOrNull() ?: 0)
-                        FirebaseDatabase.getInstance().reference.child(pathString).push()
-                            .setValue(cart).addOnCompleteListener {
-
-                            }
                     }
                 }
-        }
+            }
+    }
+
+    private fun updateCartItem() {
+        val pathString = "cart/" + user?.uid
+
+        database.reference.child(pathString).get()
+            .addOnSuccessListener { snapshot ->
+                var cart: Cart? = null
+                Log.i("data", snapshot.toString())
+                val updatedQuantity: Int = cartQuantity.text.toString().toIntOrNull() ?: 0
+                if (snapshot.exists()) {
+                    for (cartItemSnapshot in snapshot.children) {
+                        val existingCartItem = cartItemSnapshot.getValue(Cart::class.java)
+                        if (existingCartItem != null && existingCartItem.productId == productId) {
+                            cartItemSnapshot.ref.child("quantity").setValue(updatedQuantity)
+                            addToCartButton.visibility = View.GONE
+                            removeFromCartButton.visibility = View.VISIBLE
+                        }
+                    }
+                } else {
+                    cart = Cart(productId!!, cartQuantity.text.toString().toIntOrNull() ?: 0)
+                    FirebaseDatabase.getInstance().reference.child(pathString).push()
+                        .setValue(cart).addOnCompleteListener {
+                            addToCartButton.visibility = View.GONE
+                            removeFromCartButton.visibility = View.VISIBLE
+                        }
+                }
+            }
     }
 
     private fun setInitialCartQuantity() {
@@ -124,10 +159,14 @@ class ProductDetailsActivity : AppCompatActivity() {
                         val existingCartItem = cartItemSnapshot.getValue(Cart::class.java)
                         if (existingCartItem != null && existingCartItem.productId == productId) {
                             cartQuantity.setText(existingCartItem.quantity.toString())
+                            addToCartButton.visibility = View.GONE
+                            removeFromCartButton.visibility = View.VISIBLE
                         }
                     }
                 } else {
                     cartQuantity.setText("1")
+                    addToCartButton.visibility = View.VISIBLE
+                    removeFromCartButton.visibility = View.GONE
                 }
             }
     }
