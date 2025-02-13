@@ -20,7 +20,7 @@ class ThankYouActivity : AppCompatActivity() {
         shopMoreButton = findViewById(R.id.shopMoreButton)
 
         shopMoreButton.setOnClickListener {
-            startActivity(Intent(this, MainActivity::class.java))
+            startActivity(Intent(this, ProductsListActivity::class.java))
         }
     }
 }

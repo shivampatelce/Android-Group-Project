@@ -1,11 +1,12 @@
 package com.example.firebasegroupapp7
 
+import android.content.Intent
 import android.os.Bundle
+import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.firebasegroupapp7.databinding.CartBinding
-import com.firebase.ui.database.FirebaseRecyclerOptions
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
 
@@ -17,6 +18,8 @@ class CartActivity : AppCompatActivity() {
     private lateinit var auth: FirebaseAuth
     private var adapter: CartAdapter? = null
 
+    private lateinit var checkoutBtn: Button
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = CartBinding.inflate(layoutInflater)
@@ -26,6 +29,12 @@ class CartActivity : AppCompatActivity() {
         auth = FirebaseAuth.getInstance()
 
         val currentUser = auth.currentUser
+
+        checkoutBtn = findViewById(R.id.checkoutBtn)
+
+        checkoutBtn.setOnClickListener {
+            startActivity(Intent(this, CheckOutSelectAddressActivity::class.java))
+        }
 
         val cartList = mutableListOf<Cart>()
         database.reference.child("cart/${currentUser?.uid}").get()

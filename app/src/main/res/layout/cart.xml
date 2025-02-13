@@ -120,7 +120,7 @@
 
 
                 <Button
-                    android:id="@+id/checkout"
+                    android:id="@+id/checkoutBtn"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_margin="10dp"

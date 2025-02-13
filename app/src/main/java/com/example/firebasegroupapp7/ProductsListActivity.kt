@@ -2,6 +2,7 @@ package com.example.firebasegroupapp7
 
 import android.content.Intent
 import android.os.Bundle
+import android.widget.ImageButton
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -16,6 +17,9 @@ class ProductsListActivity : AppCompatActivity() {
     private lateinit var auth: FirebaseAuth
     private var adapter: ProductAdapter? = null
 
+    private lateinit var goToCartButton: ImageButton
+    private lateinit var logoutButton: ImageButton
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ProductsListBinding.inflate(layoutInflater)
@@ -25,15 +29,23 @@ class ProductsListActivity : AppCompatActivity() {
 
         val currentUser = auth.currentUser
 
+        goToCartButton = findViewById(R.id.goToCartButton)
+        logoutButton = findViewById(R.id.logoutButton)
+
         if (currentUser == null) {
-            val intent = Intent(this, SignInActivity::class.java)
-            startActivity(intent)
+            startActivity(Intent(this, HomeActivity::class.java))
         } else {
-//            val intent = Intent(this, CartActivity::class.java)
-//            startActivity(intent)
             loadUI()
         }
 
+        goToCartButton.setOnClickListener {
+            startActivity(Intent(this, CartActivity::class.java))
+        }
+
+        logoutButton.setOnClickListener {
+            auth.signOut()
+            startActivity(Intent(this, HomeActivity::class.java))
+        }
     }
 
     private fun loadUI() {
