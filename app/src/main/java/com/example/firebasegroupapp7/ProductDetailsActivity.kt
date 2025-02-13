@@ -7,12 +7,14 @@ import android.view.View
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageButton
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import com.bumptech.glide.Glide
 import com.example.firebasegroupapp7.databinding.ProductDetailsBinding
 import com.example.firebasegroupapp7.databinding.SignInBinding
 import com.firebase.ui.database.FirebaseRecyclerOptions
@@ -22,6 +24,7 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
+import com.google.firebase.storage.FirebaseStorage
 
 class ProductDetailsActivity : AppCompatActivity() {
 
@@ -30,6 +33,7 @@ class ProductDetailsActivity : AppCompatActivity() {
     private lateinit var auth: FirebaseAuth
     private var user: FirebaseUser? = null
 
+    private lateinit var productImg: ImageView
     private lateinit var productTitle: TextView
     private lateinit var productDescription: TextView
     private lateinit var productPrice: TextView
@@ -51,6 +55,7 @@ class ProductDetailsActivity : AppCompatActivity() {
 
         database = FirebaseDatabase.getInstance()
 
+        productImg = findViewById(R.id.productImg)
         productTitle = findViewById(R.id.productTitle)
         productDescription = findViewById(R.id.productDescription)
         productPrice = findViewById(R.id.productPrice)
@@ -67,6 +72,16 @@ class ProductDetailsActivity : AppCompatActivity() {
                 if (snapshot.exists()) {
                     val product = snapshot.getValue(Product::class.java)
                     if (product != null) {
+
+                        val theImage: String = product.image ?: ""
+                        if (theImage.startsWith("gs://")) {
+                            val storageReference =
+                                FirebaseStorage.getInstance().getReferenceFromUrl(theImage)
+
+                            Glide.with(this)
+                                .load(storageReference)
+                                .into(productImg)
+                        }
                         productTitle.text = product.title
                         productDescription.text = product.description
                         productPrice.text = "$${product.price.toString()}"

@@ -16,6 +16,9 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+//        startActivity(Intent(this, ProductsListActivity::class.java))
+//        finish()
+
         Handler().postDelayed({
             startActivity(Intent(this, ProductsListActivity::class.java))
             finish()
