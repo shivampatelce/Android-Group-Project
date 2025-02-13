@@ -1,7 +1,6 @@
 package com.example.firebasegroupapp7
 
 import android.content.Intent
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.TextView
@@ -19,7 +18,6 @@ class ProductAdapter(private val options: FirebaseRecyclerOptions<Product>) :
     }
 
     override fun onBindViewHolder(holder: MyViewHolder, position: Int, model: Product) {
-        Log.i("options", model.title.toString())
         holder.productTitle.text = model.title
         holder.productDescription.text = model.description
         holder.productPrice.text = "$${model.price.toString()}"

@@ -2,17 +2,10 @@ package com.example.firebasegroupapp7
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.widget.Button
 import android.widget.EditText
-import android.widget.TextView
 import android.widget.Toast
-import com.google.android.material.snackbar.Snackbar
 import androidx.appcompat.app.AppCompatActivity
-import androidx.navigation.findNavController
-import androidx.navigation.ui.AppBarConfiguration
-import androidx.navigation.ui.navigateUp
-import androidx.navigation.ui.setupActionBarWithNavController
 import com.example.firebasegroupapp7.databinding.SignInBinding
 import com.google.firebase.auth.FirebaseAuth
 
@@ -47,7 +40,7 @@ class SignInActivity : AppCompatActivity() {
                 auth.signInWithEmailAndPassword(emailInput, passwordInput)
                     .addOnCompleteListener(this) { task ->
                         if (task.isSuccessful) {
-                            intent = Intent(this, MainActivity::class.java)
+                            intent = Intent(this, ProductsListActivity::class.java)
                             startActivity(intent)
                         } else {
                             // If sign in fails, display a message to the user.

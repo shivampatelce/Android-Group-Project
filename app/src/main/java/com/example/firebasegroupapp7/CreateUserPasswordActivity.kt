@@ -44,8 +44,14 @@ class CreateUserPasswordActivity : AppCompatActivity() {
             val confirmPasswordInput = confirmPassword.text.toString().trim()
 
             if (isPasswordValid(passwordInput, confirmPasswordInput)) {
+                var userEmail = "";
+
+                if(createAccount.email != null) {
+                    userEmail = createAccount.email!!
+                }
+
                 auth.createUserWithEmailAndPassword(
-                    createAccount.email,
+                    userEmail,
                     password.text.toString().trim()
                 )
                     .addOnCompleteListener(this) { task ->
