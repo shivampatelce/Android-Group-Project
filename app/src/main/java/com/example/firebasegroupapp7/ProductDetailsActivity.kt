@@ -108,14 +108,23 @@ class ProductDetailsActivity : AppCompatActivity() {
 
         database.reference.child(pathString).get()
             .addOnSuccessListener { snapshot ->
-                for (cartItemSnapshot in snapshot.children) {
-                    val existingCartItem = cartItemSnapshot.getValue(Cart::class.java)
-                    if (existingCartItem != null && existingCartItem.productId == productId) {
-                        cartItemSnapshot.ref.removeValue().addOnSuccessListener {
-                            addToCartButton.visibility = View.VISIBLE
-                            removeFromCartButton.visibility = View.GONE
-                            cartQuantity.setText("1")
+                val cartList: MutableList<Cart> = mutableListOf()
+                for (cartListSnapshot in snapshot.children) {
+                    for (cartItemSnapshot in cartListSnapshot.children) {
+                        val cartItem: Cart? = cartItemSnapshot.getValue(Cart::class.java)
+                        if (cartItem != null) {
+                            cartList.add(cartItem)
                         }
+                    }
+
+                    val updatedCartList = cartList.filter {
+                        cartItem -> cartItem.productId != productId
+                    }
+
+                    cartListSnapshot.ref.setValue(updatedCartList).addOnSuccessListener {
+                        addToCartButton.visibility = View.VISIBLE
+                        removeFromCartButton.visibility = View.GONE
+                        cartQuantity.setText("1")
                     }
                 }
             }
@@ -126,22 +135,43 @@ class ProductDetailsActivity : AppCompatActivity() {
 
         database.reference.child(pathString).get()
             .addOnSuccessListener { snapshot ->
-                var cart: Cart? = null
-                Log.i("data", snapshot.toString())
+                val cartList: MutableList<Cart> = mutableListOf()
                 val updatedQuantity: Int = cartQuantity.text.toString().toIntOrNull() ?: 0
                 if (snapshot.exists()) {
-                    for (cartItemSnapshot in snapshot.children) {
-                        val existingCartItem = cartItemSnapshot.getValue(Cart::class.java)
-                        if (existingCartItem != null && existingCartItem.productId == productId) {
-                            cartItemSnapshot.ref.child("quantity").setValue(updatedQuantity)
-                            addToCartButton.visibility = View.GONE
-                            removeFromCartButton.visibility = View.VISIBLE
+                    for (cartListSnapshot in snapshot.children) {
+                        for (cartItemSnapshot in cartListSnapshot.children) {
+                            val cartItem: Cart? = cartItemSnapshot.getValue(Cart::class.java)
+                            if (cartItem != null) {
+                                cartList.add(cartItem)
+                            }
                         }
+
+                        val exitingCartItem: Cart? =
+                            cartList.find { cartItem -> cartItem.productId == productId }
+
+                        if(exitingCartItem != null) {
+                            val updatedCartList: List<Cart> = cartList.map { cartItem ->
+                                if (cartItem.productId == productId) {
+                                    cartItem.quantity = updatedQuantity
+                                    cartItem
+                                } else {
+                                    cartItem
+                                }
+                            }
+                            cartListSnapshot.ref.setValue(updatedCartList)
+                        } else {
+                            cartList.add(Cart(productId!!, updatedQuantity))
+                            cartListSnapshot.ref.setValue(cartList)
+                        }
+
+                        addToCartButton.visibility = View.GONE
+                        removeFromCartButton.visibility = View.VISIBLE
+
                     }
                 } else {
-                    cart = Cart(productId!!, cartQuantity.text.toString().toIntOrNull() ?: 0)
+                    cartList.add(Cart(productId!!, cartQuantity.text.toString().toIntOrNull() ?: 0))
                     FirebaseDatabase.getInstance().reference.child(pathString).push()
-                        .setValue(cart).addOnCompleteListener {
+                        .setValue(cartList).addOnCompleteListener {
                             addToCartButton.visibility = View.GONE
                             removeFromCartButton.visibility = View.VISIBLE
                         }
@@ -155,12 +185,27 @@ class ProductDetailsActivity : AppCompatActivity() {
         database.reference.child(pathString).get()
             .addOnSuccessListener { snapshot ->
                 if (snapshot.exists()) {
-                    for (cartItemSnapshot in snapshot.children) {
-                        val existingCartItem = cartItemSnapshot.getValue(Cart::class.java)
-                        if (existingCartItem != null && existingCartItem.productId == productId) {
+                    for (cartListSnapshot in snapshot.children) {
+                        val cartList: MutableList<Cart> = mutableListOf()
+                        for (cartItemSnapshot in cartListSnapshot.children) {
+                            val cartItem = cartItemSnapshot.getValue(Cart::class.java)
+                            if (cartItem != null) {
+                                cartList.add(cartItem)
+                            }
+                        }
+
+                        val existingCartItem: Cart? = cartList.find { cartItem ->
+                            cartItem.productId == productId
+                        }
+
+                        if (existingCartItem != null) {
                             cartQuantity.setText(existingCartItem.quantity.toString())
                             addToCartButton.visibility = View.GONE
                             removeFromCartButton.visibility = View.VISIBLE
+                        } else {
+                            cartQuantity.setText("1")
+                            addToCartButton.visibility = View.VISIBLE
+                            removeFromCartButton.visibility = View.GONE
                         }
                     }
                 } else {
