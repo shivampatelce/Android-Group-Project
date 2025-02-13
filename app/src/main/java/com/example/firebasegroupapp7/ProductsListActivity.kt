@@ -29,9 +29,9 @@ class ProductsListActivity : AppCompatActivity() {
             val intent = Intent(this, SignInActivity::class.java)
             startActivity(intent)
         } else {
-            val intent = Intent(this, CartActivity::class.java)
-            startActivity(intent)
-//            loadUI()
+//            val intent = Intent(this, CartActivity::class.java)
+//            startActivity(intent)
+            loadUI()
         }
 
     }
