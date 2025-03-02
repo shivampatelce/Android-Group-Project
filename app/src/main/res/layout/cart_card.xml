@@ -3,112 +3,121 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:padding="12dp"
+    android:backgroundTint = "@color/light_orange"> <!-- Light Green Background -->
 
     <androidx.cardview.widget.CardView
         android:id="@+id/cartCardView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="8dp"
-        android:layout_marginTop="0dp"
-        app:cardCornerRadius="12dp"
-        app:cardElevation="8dp">
+        app:cardCornerRadius="20dp"
+        app:cardElevation="6dp"
+        app:cardBackgroundColor="#FFFFFF">
 
-        <LinearLayout
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:padding="16dp"
-            tools:layout_editor_absoluteX="1dp"
-            tools:layout_editor_absoluteY="1dp">
+            android:padding="16dp">
 
+            <!-- Product Image -->
             <ImageView
                 android:id="@+id/cartProductImage"
-                android:layout_width="250dp"
-                android:layout_height="130dp"
-                android:layout_weight="1"
-                android:padding="10dp"
-                tools:srcCompat="@tools:sample/avatars" />
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:layout_alignParentStart="true"
+                android:layout_marginEnd="12dp"
+                android:scaleType="centerCrop"
+                android:adjustViewBounds="true"/>
 
-            <LinearLayout
+            <!-- Remove/Delete Button -->
+            <ImageButton
+                android:id="@+id/removeButton"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_alignParentEnd="true"
+                android:layout_marginEnd="4dp"
+                android:background="?android:attr/selectableItemBackgroundBorderless"
+                android:padding="4dp"
+                app:srcCompat="@drawable/baseline_delete_24"
+                app:tint="#D32F2F" />
+
+            <!-- Product Name -->
+            <TextView
+                android:id="@+id/cartProductTitle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:orientation="vertical">
+                android:layout_marginEnd="40dp"
+                android:layout_toEndOf="@id/cartProductImage"
+                android:ellipsize="end"
+                android:maxLines="2"
+                android:text="Product Title"
+                android:textColor="#212121"
+                android:textSize="16sp"
+                android:textStyle="bold" />
 
-                <TextView
-                    android:id="@+id/cartProductTitle"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="4dp"
-                    android:text="TextView"
-                    android:textColor="@color/black"
-                    android:textSize="28sp"
-                    android:textStyle="bold" />
+            <!-- Discounted Price -->
+            <TextView
+                android:id="@+id/cartProductPrice"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/cartProductTitle"
+                android:layout_marginTop="4dp"
+                android:layout_toEndOf="@id/cartProductImage"
+                android:text="$100.99"
+                android:textColor="#000000"
+                android:textSize="18sp"
+                android:textStyle="bold" />
 
-                <TextView
-                    android:id="@+id/cartProductPrice"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="8dp"
-                    android:text="TextView"
-                    android:textColor="#4CAF50"
-                    android:textSize="22sp"
-                    android:textStyle="bold" />
+            <!-- Quantity Selector -->
+            <LinearLayout
+                android:id="@+id/quantityContainer"
+                android:layout_width="182dp"
+                android:layout_height="45dp"
+                android:layout_below="@id/cartProductPrice"
+                android:layout_marginStart="12dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="8dp"
+                android:layout_toEndOf="@id/cartProductImage"
+                android:gravity="center"
+                android:orientation="horizontal"
+                android:padding="4dp">
 
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                <Button
+                    android:id="@+id/decreaseQnt"
+                    android:layout_width="54dp"
+                    android:layout_height="46dp"
+                    android:backgroundTint="@color/light_orange"
                     android:gravity="center"
-                    android:orientation="horizontal"
-                    android:padding="4dp">
+                    android:text="-"
+                    android:textColor="#212121"
+                    android:textSize="18sp" />
 
-                    <Button
-                        android:id="@+id/decreaseQnt"
-                        android:layout_width="40dp"
-                        android:layout_height="40dp"
-                        android:gravity="center"
-                        android:padding="0dp"
-                        android:text="-"
-                        android:textSize="24sp" />
+                <TextView
+                    android:id="@+id/quantity"
+                    android:layout_width="57dp"
+                    android:layout_height="45dp"
+                    android:layout_marginHorizontal="4dp"
+                    android:background="@android:color/white"
+                    android:gravity="center"
+                    android:padding="8dp"
+                    android:text="1"
+                    android:textColor="#212121"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
 
-                    <EditText
-                        android:id="@+id/quantity"
-                        android:layout_width="50dp"
-                        android:layout_height="40dp"
-                        android:layout_marginHorizontal="8dp"
-                        android:background="@android:drawable/editbox_background"
-                        android:focusable="false"
-                        android:gravity="center"
-                        android:inputType="number"
-                        android:text="1"
-                        android:textSize="14sp" />
-
-                    <Button
-                        android:id="@+id/increaseQnt"
-                        android:layout_width="40dp"
-                        android:layout_height="40dp"
-                        android:gravity="center"
-                        android:padding="0dp"
-                        android:text="+"
-                        android:textSize="24sp" />
-
-                    <ImageButton
-                        android:id="@+id/removeButton"
-                        android:layout_width="40dp"
-                        android:layout_height="40dp"
-                        android:layout_marginHorizontal="8dp"
-                        android:layout_weight="1"
-                        android:background="@color/white"
-                        android:padding="0dp"
-                        app:srcCompat="@drawable/baseline_delete_24"
-                        app:tint="#D32F2F" />
-
-                </LinearLayout>
-
+                <Button
+                    android:id="@+id/increaseQnt"
+                    android:layout_width="54dp"
+                    android:layout_height="46dp"
+                    android:backgroundTint="@color/light_orange"
+                    android:gravity="center"
+                    android:text="+"
+                    android:textColor="#212121"
+                    android:textSize="18sp" />
             </LinearLayout>
-        </LinearLayout>
+        </RelativeLayout>
     </androidx.cardview.widget.CardView>
-
 
 </LinearLayout>

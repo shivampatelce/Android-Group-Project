@@ -7,6 +7,7 @@
     android:fitsSystemWindows="true"
     android:orientation="vertical">
 
+    <!-- Top Right Buttons -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -19,7 +20,8 @@
             android:layout_height="48dp"
             android:layout_marginEnd="8dp"
             android:background="?attr/selectableItemBackgroundBorderless"
-            app:srcCompat="@drawable/baseline_shopping_cart_24" />
+            app:srcCompat="@drawable/baseline_shopping_cart_24"
+            android:contentDescription="Go to Cart"/>
 
         <ImageButton
             android:id="@+id/logoutButton"
@@ -28,15 +30,14 @@
             android:layout_marginEnd="8dp"
             android:background="?attr/selectableItemBackgroundBorderless"
             app:srcCompat="@drawable/baseline_logout_24"
-            app:tint="#D32F2F" />
+            android:contentDescription="Logout" />
 
     </LinearLayout>
 
+    <!-- RecyclerView for Listing Items -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerView"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
-
 </LinearLayout>
-

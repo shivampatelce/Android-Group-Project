@@ -31,7 +31,7 @@ class ProductAdapter(private val options: FirebaseRecyclerOptions<Product>) :
             val storageReference =FirebaseStorage.getInstance().getReferenceFromUrl(image)
             Glide.with(holder.productImg.context)
                 .load(storageReference)
-                .into(holder    .productImg)
+                .into(holder.productImg)
         } else {
             Glide.with(holder.productImg.context)
                 .load(image)

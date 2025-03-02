@@ -36,12 +36,13 @@ class ProductDetailsActivity : AppCompatActivity() {
     private lateinit var productImg: ImageView
     private lateinit var productTitle: TextView
     private lateinit var productDescription: TextView
+    private lateinit var itemDetails: TextView
     private lateinit var productPrice: TextView
     private lateinit var cartQuantity: EditText
     private lateinit var incrementButton: Button
     private lateinit var decrementButton: Button
-    private lateinit var addToCartButton: ImageButton
-    private lateinit var removeFromCartButton: ImageButton
+    private lateinit var addToCartButton: Button
+//    private lateinit var removeFromCart: Button
     private var productId: Long? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -58,12 +59,13 @@ class ProductDetailsActivity : AppCompatActivity() {
         productImg = findViewById(R.id.productImg)
         productTitle = findViewById(R.id.productTitle)
         productDescription = findViewById(R.id.productDescription)
+        itemDetails = findViewById(R.id.itemDetails)
         productPrice = findViewById(R.id.productPrice)
         cartQuantity = findViewById(R.id.quantity)
         incrementButton = findViewById(R.id.increaseQnt)
         decrementButton = findViewById(R.id.decreaseQnt)
         addToCartButton = findViewById(R.id.addToCart)
-        removeFromCartButton = findViewById(R.id.removeFormCart)
+//        removeFromCart = findViewById(R.id.removeFromCart)
 
         productId = intent.getLongExtra("productId", -1L)
 
@@ -84,6 +86,7 @@ class ProductDetailsActivity : AppCompatActivity() {
                         }
                         productTitle.text = product.title
                         productDescription.text = product.description
+                        itemDetails.text = product.itemsDetails
                         productPrice.text = "$${product.price.toString()}"
                     }
                 }
@@ -113,9 +116,9 @@ class ProductDetailsActivity : AppCompatActivity() {
             updateCartItem()
         }
 
-        removeFromCartButton.setOnClickListener {
-            removeItemFromCart()
-        }
+//        removeFromCart.setOnClickListener {
+//            removeItemFromCart()
+//        }
     }
 
     private fun removeItemFromCart() {
@@ -138,7 +141,7 @@ class ProductDetailsActivity : AppCompatActivity() {
 
                     cartListSnapshot.ref.setValue(updatedCartList).addOnSuccessListener {
                         addToCartButton.visibility = View.VISIBLE
-                        removeFromCartButton.visibility = View.GONE
+//                        removeFromCart.visibility = View.GONE
                         cartQuantity.setText("1")
                     }
                 }
@@ -180,7 +183,7 @@ class ProductDetailsActivity : AppCompatActivity() {
                         }
 
                         addToCartButton.visibility = View.GONE
-                        removeFromCartButton.visibility = View.VISIBLE
+//                        removeFromCart.visibility = View.VISIBLE
 
                     }
                 } else {
@@ -188,7 +191,7 @@ class ProductDetailsActivity : AppCompatActivity() {
                     FirebaseDatabase.getInstance().reference.child(pathString).push()
                         .setValue(cartList).addOnCompleteListener {
                             addToCartButton.visibility = View.GONE
-                            removeFromCartButton.visibility = View.VISIBLE
+//                            removeFromCart.visibility = View.VISIBLE
                         }
                 }
             }
@@ -216,17 +219,17 @@ class ProductDetailsActivity : AppCompatActivity() {
                         if (existingCartItem != null) {
                             cartQuantity.setText(existingCartItem.quantity.toString())
                             addToCartButton.visibility = View.GONE
-                            removeFromCartButton.visibility = View.VISIBLE
+//                            removeFromCart.visibility = View.VISIBLE
                         } else {
                             cartQuantity.setText("1")
                             addToCartButton.visibility = View.VISIBLE
-                            removeFromCartButton.visibility = View.GONE
+//                            removeFromCart.visibility = View.GONE
                         }
                     }
                 } else {
                     cartQuantity.setText("1")
                     addToCartButton.visibility = View.VISIBLE
-                    removeFromCartButton.visibility = View.GONE
+//                    removeFromCart.visibility = View.GONE
                 }
             }
     }
