@@ -28,6 +28,7 @@ class CheckOutSelectAddressActivity : AppCompatActivity() {
     private lateinit var province: EditText
     private lateinit var postalCode: EditText
     private lateinit var addNewAddressBtn: Button
+    private var totalBillingAmount: Long = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -48,7 +49,9 @@ class CheckOutSelectAddressActivity : AppCompatActivity() {
         postalCode = findViewById(R.id.postalCode)
         addNewAddressBtn = findViewById(R.id.addAddress)
 
-        adapter = AddressAdapter(addressList)
+        totalBillingAmount = intent.getLongExtra("totalBillingAmount", -1)
+
+        adapter = AddressAdapter(addressList, totalBillingAmount)
 
         val recyclerView: RecyclerView = findViewById(R.id.addressListRecyclerView)
         recyclerView.layoutManager = LinearLayoutManager(this)

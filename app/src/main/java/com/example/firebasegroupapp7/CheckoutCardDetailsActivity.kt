@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
 import android.widget.EditText
+import android.widget.TextView
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
@@ -22,6 +23,8 @@ class CheckoutCardDetailsActivity : AppCompatActivity() {
     private lateinit var expiryYear: EditText
     private lateinit var cvv: EditText
     private lateinit var paymentButton: Button
+    private lateinit var amountText: TextView
+    private var totalBillingAmount: Long = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -29,19 +32,23 @@ class CheckoutCardDetailsActivity : AppCompatActivity() {
         binding = CheckoutCardDetailsBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        totalBillingAmount = intent.getLongExtra("totalBillingAmount", -1L)
+
         cardHolderName = findViewById(R.id.cardHolderName)
         cardNumber = findViewById(R.id.cardNumber)
         expiryMonth = findViewById(R.id.expiryMonth)
         expiryYear = findViewById(R.id.expiryYear)
         cvv = findViewById(R.id.cvv)
         paymentButton = findViewById(R.id.paymentButton)
+        amountText = findViewById(R.id.amount)
+
+        amountText.setText("$ " + totalBillingAmount.toString())
 
         paymentButton.setOnClickListener {
             if (validateInputs()) {
                 startActivity(Intent(this, ThankYouActivity::class.java))
             }
         }
-
     }
 
     private fun validateInputs(): Boolean {

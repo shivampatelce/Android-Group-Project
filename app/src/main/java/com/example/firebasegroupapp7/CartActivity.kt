@@ -3,14 +3,13 @@ package com.example.firebasegroupapp7
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
 import com.example.firebasegroupapp7.databinding.CartBinding
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
-import com.google.firebase.storage.FirebaseStorage
 
 class CartActivity : AppCompatActivity() {
 
@@ -21,6 +20,10 @@ class CartActivity : AppCompatActivity() {
     private var adapter: CartAdapter? = null
 
     private lateinit var checkoutBtn: Button
+    private lateinit var subtotalText: TextView
+    private lateinit var taxText: TextView
+    private lateinit var totalAmountText: TextView
+    private var totalBillingAmount: Long = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -33,14 +36,20 @@ class CartActivity : AppCompatActivity() {
         val currentUser = auth.currentUser
 
         checkoutBtn = findViewById(R.id.checkoutBtn)
+        subtotalText = findViewById(R.id.subtotalAmount)
+        taxText = findViewById(R.id.taxAmount)
+        totalAmountText = findViewById(R.id.totalAmount)
 
         checkoutBtn.setOnClickListener {
-            startActivity(Intent(this, CheckOutSelectAddressActivity::class.java))
+            val intent = Intent(this, CheckOutSelectAddressActivity::class.java)
+            intent.putExtra("totalBillingAmount", totalBillingAmount)
+            startActivity(intent)
         }
 
         val cartList = mutableListOf<Cart>()
+        val productList = getProductList()
 
-        adapter = CartAdapter(cartList, getProductList(), database, currentUser)
+        adapter = CartAdapter(cartList, productList, database, currentUser)
 
         val recyclerView: RecyclerView = findViewById(R.id.cartRecyclerView)
         recyclerView.layoutManager = LinearLayoutManager(this)
@@ -58,6 +67,7 @@ class CartActivity : AppCompatActivity() {
                             }
                         }
                     }
+                    updateTotalBilling(cartList, productList)
                     adapter?.notifyDataSetChanged()
                 }
             }
@@ -70,7 +80,7 @@ class CartActivity : AppCompatActivity() {
                 if (snapshot.exists()) {
                     for (productSnapshot in snapshot.children) {
                         val product = productSnapshot.getValue(Product::class.java)
-                        if(product != null) {
+                        if (product != null) {
                             productList.add(product)
                         }
                     }
@@ -78,6 +88,30 @@ class CartActivity : AppCompatActivity() {
             }
 
         return productList;
+    }
+
+    private fun updateTotalBilling(
+        cartList: MutableList<Cart>,
+        productsList: MutableList<Product>
+    ) {
+        var subtotal: Long = 0
+        var tax: Long = 0
+        cartList.forEach { cartItem ->
+            val product : Product? = productsList.find { productItem -> productItem.productId == cartItem.productId }
+            if(product != null) {
+                val itemTotal = product.price?.times(cartItem.quantity)
+                if (itemTotal != null) {
+                    subtotal += itemTotal
+                }
+            }
+        }
+
+        tax = (subtotal * 0.05).toLong()
+        totalBillingAmount = subtotal + tax
+
+        subtotalText.setText("$ " + subtotal.toString())
+        taxText.setText("$ "+ tax.toString())
+        totalAmountText.setText("$ "+ totalBillingAmount.toString())
     }
 
 }
