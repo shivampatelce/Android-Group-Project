@@ -6,9 +6,11 @@ import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.example.firebasegroupapp7.databinding.CartBinding
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.storage.FirebaseStorage
 
 class CartActivity : AppCompatActivity() {
 
@@ -37,23 +39,45 @@ class CartActivity : AppCompatActivity() {
         }
 
         val cartList = mutableListOf<Cart>()
-        database.reference.child("cart/${currentUser?.uid}").get()
-            .addOnSuccessListener { cartSnapshot ->
-                val cartProduct = cartSnapshot.getValue(Cart::class.java)
-                val productList = mutableListOf<Long>()
 
-            }
-
-//        adapter = CartAdapter(options)
+        adapter = CartAdapter(cartList, getProductList(), database, currentUser)
 
         val recyclerView: RecyclerView = findViewById(R.id.cartRecyclerView)
         recyclerView.layoutManager = LinearLayoutManager(this)
         recyclerView.adapter = adapter
+
+        val pathString = "cart/" + currentUser?.uid
+        database.reference.child(pathString).get()
+            .addOnSuccessListener { snapshot ->
+                if (snapshot.exists()) {
+                    for (cartListSnapshot in snapshot.children) {
+                        for (cartItemSnapshot in cartListSnapshot.children) {
+                            val cartItem = cartItemSnapshot.getValue(Cart::class.java)
+                            if (cartItem != null) {
+                                cartList.add(cartItem)
+                            }
+                        }
+                    }
+                    adapter?.notifyDataSetChanged()
+                }
+            }
     }
 
-    override fun onStart() {
-        super.onStart()
-        adapter?.startListening()
+    private fun getProductList(): MutableList<Product> {
+        val productList: MutableList<Product> = mutableListOf()
+        database.reference.child("products").get()
+            .addOnSuccessListener { snapshot ->
+                if (snapshot.exists()) {
+                    for (productSnapshot in snapshot.children) {
+                        val product = productSnapshot.getValue(Product::class.java)
+                        if(product != null) {
+                            productList.add(product)
+                        }
+                    }
+                }
+            }
+
+        return productList;
     }
 
 }
