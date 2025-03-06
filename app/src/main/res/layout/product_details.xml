@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -15,12 +14,12 @@
         android:layout_height="?attr/actionBarSize"
         android:background="@android:color/white"
         android:elevation="4dp"
-        app:navigationIcon="@drawable/ic_back_arrow"
-        app:title=""
-        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent">
+        app:layout_constraintTop_toTopOf="parent"
+        app:navigationIcon="@drawable/ic_back_arrow"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+        app:title="">
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -31,10 +30,10 @@
                 android:layout_width="48dp"
                 android:layout_height="48dp"
                 android:layout_alignParentEnd="true"
-                android:layout_marginEnd="16dp"
                 android:layout_centerVertical="true"
+                android:layout_marginEnd="16dp"
                 android:background="?attr/selectableItemBackgroundBorderless"
-                app:srcCompat="@drawable/baseline_shopping_cart_24"/>
+                app:srcCompat="@drawable/baseline_shopping_cart_24" />
         </RelativeLayout>
     </androidx.appcompat.widget.Toolbar>
 
@@ -52,26 +51,27 @@
             android:paddingBottom="16dp">
 
             <!-- Product Image -->
+
             <ImageView
                 android:id="@+id/productImg"
                 android:layout_width="match_parent"
                 android:layout_height="320dp"
                 android:scaleType="centerInside"
-                tools:srcCompat="@tools:sample/avatars"/>
+                tools:srcCompat="@tools:sample/avatars" />
 
             <!-- Product Title -->
             <TextView
                 android:id="@+id/productTitle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:maxLines="2"
                 android:paddingHorizontal="20dp"
                 android:paddingTop="12dp"
                 android:text="Modern Elegance Bookcase Shelf"
                 android:textColor="#212121"
                 android:textSize="22sp"
-                android:textStyle="bold"
-                android:maxLines="2"
-                android:ellipsize="end"/>
+                android:textStyle="bold" />
 
             <!-- Product Price -->
             <TextView
@@ -82,21 +82,89 @@
                 android:text="Price: $499.00"
                 android:textColor="@color/orange"
                 android:textSize="18sp"
-                android:textStyle="bold"/>
+                android:textStyle="bold" />
 
-            <!-- Add to Cart Button -->
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/addToCart"
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:backgroundTint="@color/orange"
-                android:text="Add to Cart"
-                android:textSize="16sp"
-                android:textStyle="bold"
-                android:textColor="#FFFFFF"
-                app:cornerRadius="50dp"
-                android:layout_marginTop="8dp"
-                android:layout_marginHorizontal="16dp"/>
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
+
+                <LinearLayout
+                    android:id="@+id/quantityContainer"
+                    android:layout_width="182dp"
+                    android:layout_height="45dp"
+                    android:layout_below="@id/cartProductPrice"
+                    android:layout_marginStart="12dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="8dp"
+                    android:layout_toEndOf="@id/cartProductImage"
+                    android:gravity="center"
+                    android:orientation="horizontal"
+                    android:padding="4dp">
+
+                    <Button
+                        android:id="@+id/decreaseQnt"
+                        android:layout_width="54dp"
+                        android:layout_height="46dp"
+                        android:backgroundTint="@color/light_orange"
+                        android:gravity="center"
+                        android:text="-"
+                        android:textColor="#212121"
+                        android:textSize="18sp" />
+
+                    <TextView
+                        android:id="@+id/quantity"
+                        android:layout_width="57dp"
+                        android:layout_height="45dp"
+                        android:layout_marginHorizontal="4dp"
+                        android:background="@android:color/white"
+                        android:gravity="center"
+                        android:padding="8dp"
+                        android:text="1"
+                        android:textColor="#212121"
+                        android:textSize="14sp"
+                        android:textStyle="bold" />
+
+                    <Button
+                        android:id="@+id/increaseQnt"
+                        android:layout_width="54dp"
+                        android:layout_height="46dp"
+                        android:backgroundTint="@color/light_orange"
+                        android:gravity="center"
+                        android:text="+"
+                        android:textColor="#212121"
+                        android:textSize="18sp" />
+                </LinearLayout>
+
+                <!-- Add to Cart Button -->
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/addToCart"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:layout_marginHorizontal="16dp"
+                    android:layout_marginTop="8dp"
+                    android:backgroundTint="@color/orange"
+                    android:text="Add to Cart"
+                    android:textColor="#FFFFFF"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    app:cornerRadius="50dp" />
+
+                <!-- Remove From Cart Button -->
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/removeFromCart"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:layout_marginHorizontal="16dp"
+                    android:layout_marginTop="8dp"
+                    android:backgroundTint="@color/orange"
+                    android:text="Remove From Cart"
+                    android:textColor="#FFFFFF"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    app:cornerRadius="50dp" />
+
+            </LinearLayout>
 
             <!-- Description Section -->
             <androidx.cardview.widget.CardView
@@ -117,20 +185,20 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_marginBottom="4dp"
                         android:text="Description:"
-                        android:textSize="16sp"
-                        android:textStyle="bold"
                         android:textColor="#212121"
-                        android:layout_marginBottom="4dp"/>
+                        android:textSize="16sp"
+                        android:textStyle="bold" />
 
                     <TextView
                         android:id="@+id/productDescription"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:lineSpacingExtra="4dp"
                         android:text="Elevate your space with the Modern Elegance Bookcase Shelf. This versatile piece offers ample storage with sleek, open shelves, perfect for displaying books and decor. Crafted from high-quality engineered wood, its clean lines and contemporary design add style to any room."
-                        android:textSize="14sp"
                         android:textColor="#757575"
-                        android:lineSpacingExtra="4dp"/>
+                        android:textSize="14sp" />
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
             <!-- Details Section (Below Description) -->
@@ -152,20 +220,20 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_marginBottom="4dp"
                         android:text="Details:"
-                        android:textSize="16sp"
-                        android:textStyle="bold"
                         android:textColor="#212121"
-                        android:layout_marginBottom="4dp"/>
+                        android:textSize="16sp"
+                        android:textStyle="bold" />
 
                     <TextView
                         android:id="@+id/itemDetails"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:lineSpacingExtra="4dp"
                         android:text="Material: Engineered Wood\nDimensions: 72' Height"
-                        android:textSize="14sp"
                         android:textColor="#757575"
-                        android:lineSpacingExtra="4dp"/>
+                        android:textSize="14sp" />
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
 

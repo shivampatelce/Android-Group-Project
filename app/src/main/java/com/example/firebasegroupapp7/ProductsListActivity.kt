@@ -53,7 +53,7 @@ class ProductsListActivity : AppCompatActivity() {
         val options =
             FirebaseRecyclerOptions.Builder<Product>().setQuery(query, Product::class.java).build()
 
-        adapter = ProductAdapter(options)
+        adapter = ProductAdapter(options, FirebaseDatabase.getInstance(), auth.currentUser)
 
         val recyclerView: RecyclerView = findViewById(R.id.recyclerView)
         recyclerView.layoutManager = LinearLayoutManager(this)
