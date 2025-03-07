@@ -11,6 +11,9 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.example.firebasegroupapp7.databinding.CheckOutSelectAddressBinding
 import com.example.firebasegroupapp7.databinding.CheckoutCardDetailsBinding
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.database.FirebaseDatabase
 import java.util.Calendar
 
 class CheckoutCardDetailsActivity : AppCompatActivity() {
@@ -25,6 +28,11 @@ class CheckoutCardDetailsActivity : AppCompatActivity() {
     private lateinit var paymentButton: Button
     private lateinit var amountText: TextView
     private var totalBillingAmount: Long = 0
+    private lateinit var cartList: ArrayList<Cart>
+    private lateinit var database: FirebaseDatabase
+    private lateinit var auth: FirebaseAuth
+    private var user: FirebaseUser? = null
+    private lateinit var address: UserAddress
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -33,6 +41,12 @@ class CheckoutCardDetailsActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         totalBillingAmount = intent.getLongExtra("totalBillingAmount", -1L)
+        cartList = intent.getSerializableExtra("cartItems") as ArrayList<Cart>
+        address = intent.getSerializableExtra("address") as UserAddress
+
+        database = FirebaseDatabase.getInstance()
+        auth = FirebaseAuth.getInstance()
+        user = auth.currentUser
 
         cardHolderName = findViewById(R.id.cardHolderName)
         cardNumber = findViewById(R.id.cardNumber)
@@ -46,9 +60,40 @@ class CheckoutCardDetailsActivity : AppCompatActivity() {
 
         paymentButton.setOnClickListener {
             if (validateInputs()) {
-                startActivity(Intent(this, ThankYouActivity::class.java))
+                completeOrder(Order(user?.uid!!, cartList, address))
             }
         }
+    }
+
+    private fun completeOrder(order: Order) {
+        database.reference.child("orders/" + user?.uid)
+            .get()
+            .addOnSuccessListener { snapshot ->
+                val orderList: MutableList<Order> = mutableListOf()
+                if(snapshot.exists()) {
+                    for (orderSnapshot in snapshot.children) {
+                        val orderItem: Order? = orderSnapshot.getValue(Order::class.java)
+                        if(orderItem != null) {
+                            orderList.add(orderItem)
+                        }
+                    }
+                }
+                orderList.add(order)
+
+                snapshot.ref.setValue(orderList)
+                    .addOnSuccessListener {
+                        emptyCart()
+                    }
+            }
+    }
+
+    private fun emptyCart() {
+        val pathString = "cart/" + user?.uid
+
+        database.reference.child(pathString).removeValue()
+            .addOnSuccessListener {
+                startActivity(Intent(this, ThankYouActivity::class.java))
+            }
     }
 
     private fun validateInputs(): Boolean {

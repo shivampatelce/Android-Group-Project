@@ -1,5 +1,6 @@
 package com.example.firebasegroupapp7
 
+import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.Button
@@ -17,7 +18,8 @@ class CartAdapter(
     private val cartList: MutableList<Cart>,
     private val productList: MutableList<Product>,
     private val database: FirebaseDatabase,
-    private val user: FirebaseUser?
+    private val user: FirebaseUser?,
+    private val cartActivityContext: Context,
 ) :
     RecyclerView.Adapter<CartAdapter.MyViewHolder>() {
 
@@ -36,6 +38,7 @@ class CartAdapter(
 
         if (product != null) {
             holder.cartProductTitle.setText(product.title)
+            holder.cartProductPrice.setText("$ " + product.price.toString())
 
             val productImg: String = product.image ?: ""
             if (productImg.startsWith("gs://")) {
@@ -77,6 +80,7 @@ class CartAdapter(
         RecyclerView.ViewHolder(inflater.inflate(R.layout.cart_card, parent, false)) {
         val cartProductTitle: TextView = itemView.findViewById(R.id.cartProductTitle)
         val quantity: TextView = itemView.findViewById(R.id.quantity)
+        val cartProductPrice: TextView = itemView.findViewById(R.id.cartProductPrice)
         val productImg: ImageView = itemView.findViewById(R.id.cartProductImage)
         var cartQuantity: TextView = itemView.findViewById(R.id.quantity)
         var incrementButton: Button = itemView.findViewById(R.id.increaseQnt)
@@ -107,9 +111,8 @@ class CartAdapter(
                     }
 
                     cartListSnapshot.ref.setValue(updatedCartList).addOnSuccessListener {
-                        this.cartList.removeAt(productIndex)
-                        notifyItemRemoved(productIndex)
-                        notifyItemRangeChanged(productIndex, this.cartList.size)
+                        (cartActivityContext as CartActivity).updateCart()
+
                     }
                 }
             }
@@ -150,6 +153,8 @@ class CartAdapter(
                         }
 
                     }
+
+                    (cartActivityContext as CartActivity).updateCart()
                 }
             }
     }

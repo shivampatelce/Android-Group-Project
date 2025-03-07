@@ -2,13 +2,17 @@ package com.example.firebasegroupapp7
 
 import android.content.Intent
 import android.os.Bundle
+import android.view.View
 import android.widget.Button
+import android.widget.ScrollView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.firebasegroupapp7.databinding.CartBinding
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.database.FirebaseDatabase
 
 class CartActivity : AppCompatActivity() {
@@ -23,7 +27,12 @@ class CartActivity : AppCompatActivity() {
     private lateinit var subtotalText: TextView
     private lateinit var taxText: TextView
     private lateinit var totalAmountText: TextView
+    private lateinit var emptyCartView: ConstraintLayout
+    private lateinit var cartListView: ScrollView
     private var totalBillingAmount: Long = 0
+    private var cartList = arrayListOf<Cart>()
+    private lateinit var currentUser: FirebaseUser
+    private lateinit var productList: MutableList<Product>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -33,31 +42,40 @@ class CartActivity : AppCompatActivity() {
         database = FirebaseDatabase.getInstance()
         auth = FirebaseAuth.getInstance()
 
-        val currentUser = auth.currentUser
+        currentUser = auth.currentUser!!
 
         checkoutBtn = findViewById(R.id.checkoutBtn)
         subtotalText = findViewById(R.id.subtotalAmount)
         taxText = findViewById(R.id.taxAmount)
         totalAmountText = findViewById(R.id.totalAmount)
+        emptyCartView = findViewById(R.id.emptyCart)
+        cartListView = findViewById(R.id.cartListView)
 
         checkoutBtn.setOnClickListener {
-            val intent = Intent(this, CheckOutSelectAddressActivity::class.java)
-            intent.putExtra("totalBillingAmount", totalBillingAmount)
-            startActivity(intent)
+            if (totalBillingAmount != 0L) {
+                val intent = Intent(this, CheckOutSelectAddressActivity::class.java)
+                intent.putExtra("cartItems", cartList)
+                intent.putExtra("totalBillingAmount", totalBillingAmount)
+                startActivity(intent)
+            }
         }
 
-        val cartList = mutableListOf<Cart>()
-        val productList = getProductList()
+        productList = getProductList()
 
-        adapter = CartAdapter(cartList, productList, database, currentUser)
+        adapter = CartAdapter(cartList, productList, database, currentUser, this)
 
         val recyclerView: RecyclerView = findViewById(R.id.cartRecyclerView)
         recyclerView.layoutManager = LinearLayoutManager(this)
         recyclerView.adapter = adapter
 
+        updateCart()
+    }
+
+    fun updateCart() {
         val pathString = "cart/" + currentUser?.uid
         database.reference.child(pathString).get()
             .addOnSuccessListener { snapshot ->
+                cartList.clear()
                 if (snapshot.exists()) {
                     for (cartListSnapshot in snapshot.children) {
                         for (cartItemSnapshot in cartListSnapshot.children) {
@@ -67,10 +85,22 @@ class CartActivity : AppCompatActivity() {
                             }
                         }
                     }
-                    updateTotalBilling(cartList, productList)
-                    adapter?.notifyDataSetChanged()
                 }
+
+                adapter?.notifyDataSetChanged()
+                updateCartView()
+                updateTotalBilling()
             }
+    }
+
+    private fun updateCartView() {
+        if (cartList.isEmpty()) {
+            emptyCartView.visibility = View.VISIBLE
+            cartListView.visibility = View.GONE
+        } else {
+            emptyCartView.visibility = View.GONE
+            cartListView.visibility = View.VISIBLE
+        }
     }
 
     private fun getProductList(): MutableList<Product> {
@@ -90,16 +120,14 @@ class CartActivity : AppCompatActivity() {
         return productList;
     }
 
-    private fun updateTotalBilling(
-        cartList: MutableList<Cart>,
-        productsList: MutableList<Product>
-    ) {
+    private fun updateTotalBilling() {
         var subtotal: Long = 0
         var tax: Long = 0
         cartList.forEach { cartItem ->
-            val product : Product? = productsList.find { productItem -> productItem.productId == cartItem.productId }
-            if(product != null) {
-                val itemTotal = product.price?.times(cartItem.quantity)
+            val product: Product? =
+                productList.find { productItem -> productItem.productId == cartItem.productId }
+            if (product != null) {
+                val itemTotal = cartItem.quantity.times(product.price!!)
                 if (itemTotal != null) {
                     subtotal += itemTotal
                 }
@@ -110,8 +138,8 @@ class CartActivity : AppCompatActivity() {
         totalBillingAmount = subtotal + tax
 
         subtotalText.setText("$ " + subtotal.toString())
-        taxText.setText("$ "+ tax.toString())
-        totalAmountText.setText("$ "+ totalBillingAmount.toString())
+        taxText.setText("$ " + tax.toString())
+        totalAmountText.setText("$ " + totalBillingAmount.toString())
     }
 
 }

@@ -9,7 +9,9 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
 
-class AddressAdapter(private val addressList: MutableList<UserAddress>, private val totalBillingAmount: Long) :
+class AddressAdapter(private val addressList: MutableList<UserAddress>,
+                     private val totalBillingAmount: Long,
+                     private val cartList: ArrayList<Cart>) :
     RecyclerView.Adapter<AddressAdapter.MyViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
@@ -32,6 +34,7 @@ class AddressAdapter(private val addressList: MutableList<UserAddress>, private 
             val intent = Intent(holder.itemView.context, CheckoutCardDetailsActivity::class.java)
             intent.putExtra("address", address)
             intent.putExtra("totalBillingAmount", totalBillingAmount)
+            intent.putExtra("cartItems", cartList)
             holder.itemView.context.startActivity(intent)
         }
 

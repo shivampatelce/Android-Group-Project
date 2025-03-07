@@ -29,6 +29,7 @@ class CheckOutSelectAddressActivity : AppCompatActivity() {
     private lateinit var postalCode: EditText
     private lateinit var addNewAddressBtn: Button
     private var totalBillingAmount: Long = 0
+    private lateinit var cartList: ArrayList<Cart>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -50,8 +51,9 @@ class CheckOutSelectAddressActivity : AppCompatActivity() {
         addNewAddressBtn = findViewById(R.id.addAddress)
 
         totalBillingAmount = intent.getLongExtra("totalBillingAmount", -1)
+        cartList = intent.getSerializableExtra("cartItems") as ArrayList<Cart>
 
-        adapter = AddressAdapter(addressList, totalBillingAmount)
+        adapter = AddressAdapter(addressList, totalBillingAmount, cartList)
 
         val recyclerView: RecyclerView = findViewById(R.id.addressListRecyclerView)
         recyclerView.layoutManager = LinearLayoutManager(this)
