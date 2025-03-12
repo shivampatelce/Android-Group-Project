@@ -28,7 +28,7 @@ class CheckoutCardDetailsActivity : AppCompatActivity() {
     private lateinit var cvv: EditText
     private lateinit var paymentButton: Button
     private lateinit var amountText: TextView
-    private lateinit var backButton: ImageButton
+    private lateinit var cancelButton: Button
     private var totalBillingAmount: Long = 0
     private lateinit var cartList: ArrayList<Cart>
     private lateinit var database: FirebaseDatabase
@@ -57,7 +57,7 @@ class CheckoutCardDetailsActivity : AppCompatActivity() {
         cvv = findViewById(R.id.cvv)
         paymentButton = findViewById(R.id.paymentButton)
         amountText = findViewById(R.id.amount)
-        backButton = findViewById(R.id.backButton)
+        cancelButton = findViewById(R.id.cancelButton)
 
         amountText.setText("$ " + totalBillingAmount.toString())
 
@@ -67,8 +67,8 @@ class CheckoutCardDetailsActivity : AppCompatActivity() {
             }
         }
 
-        backButton.setOnClickListener {
-            startActivity(Intent(this, CheckOutSelectAddressActivity::class.java))
+        cancelButton.setOnClickListener {
+            startActivity(Intent(this, CartActivity::class.java))
         }
     }
 
