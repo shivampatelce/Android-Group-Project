@@ -6,150 +6,178 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:background="@color/white"
+    android:fitsSystemWindows="true"
     tools:context=".CartActivity">
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageButton
+            android:id="@+id/backButton"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_marginStart="8dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="Go Back"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/ic_back_arrow" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <!-- Empty Cart Message (Initially Hidden) -->
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/emptyCart"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:visibility="gone">
 
         <TextView
-            android:id="@+id/textView2"
+            android:id="@+id/textViewEmptyCart"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Your cart is empty."
-            android:textSize="26dp"
+            android:textSize="22sp"
+            android:textColor="@color/black"
+            android:fontFamily="sans-serif-medium"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="0.5" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <ScrollView
-        android:id="@+id/cartListView"
+    <!-- Cart Items List (Scrollable) -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/cartRecyclerView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:clipToPadding="false"
+        android:paddingBottom="12dp"
+        tools:itemCount="3" />
 
-        <LinearLayout
+    <!-- Fixed Bottom Section: Billing + Checkout -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:elevation="4dp"
+        android:orientation="vertical"
+        android:padding="12dp"
+        android:layout_gravity="bottom">
+
+        <!-- Billing CardView -->
+        <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/cartRecyclerView"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="1dp"
-                app:layout_constraintTop_toTopOf="parent"
-                tools:layout_editor_absoluteX="1dp"/>
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            >
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:padding="16dp"
                 android:orientation="vertical">
 
-                <androidx.cardview.widget.CardView
+                <!-- Subtotal -->
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_margin="8dp"
-                    android:padding="8dp"
-                    app:cardCornerRadius="8dp">
+                    android:orientation="horizontal"
+                    android:paddingVertical="6dp">
 
-                    <LinearLayout
-                        android:id="@+id/bill"
-                        android:layout_width="match_parent"
+                    <TextView
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:padding="8dp"
-                        android:orientation="vertical">
+                        android:layout_weight="1"
+                        android:text="Subtotal:"
+                        android:textColor="@color/black"
+                        android:textSize="16sp" />
 
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:orientation="horizontal"
-                            android:paddingVertical="4dp">
+                    <TextView
+                        android:id="@+id/subtotalAmount"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="$0.00"
+                        android:textColor="@color/black"
+                        android:textSize="16sp" />
+                </LinearLayout>
 
-                            <TextView
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:text="Subtotal:"
-                                android:textColor="@color/black"
-                                android:textSize="16sp" />
-
-                            <TextView
-                                android:id="@+id/subtotalAmount"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="$0.00"
-                                android:textColor="@color/black"
-                                android:textSize="16sp" />
-                        </LinearLayout>
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:orientation="horizontal"
-                            android:paddingVertical="4dp">
-
-                            <TextView
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:text="Tax(5%):"
-                                android:textColor="@color/black"
-                                android:textSize="16sp" />
-
-                            <TextView
-                                android:id="@+id/taxAmount"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="$0.00"
-                                android:textColor="@color/black"
-                                android:textSize="16sp" />
-                        </LinearLayout>
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:orientation="horizontal"
-                            android:paddingVertical="4dp">
-
-                            <TextView
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:text="Total:"
-                                android:textColor="@color/black"
-                                android:textSize="18sp"
-                                android:textStyle="bold" />
-
-                            <TextView
-                                android:id="@+id/totalAmount"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="$0.00"
-                                android:textColor="@color/black"
-                                android:textSize="18sp"
-                                android:textStyle="bold" />
-                        </LinearLayout>
-
-                    </LinearLayout>
-                </androidx.cardview.widget.CardView>
-
-
-                <Button
-                    android:id="@+id/checkoutBtn"
+                <!-- Tax -->
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_margin="10dp"
-                    android:text="Proceed To Checkout" />
+                    android:orientation="horizontal"
+                    android:paddingVertical="6dp">
+
+                    <TextView
+                        android:id="@+id/taxLabel"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Tax (13%):"
+                        android:textColor="@color/black"
+                        android:textSize="16sp" />
+
+                    <TextView
+                        android:id="@+id/taxAmount"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="$0.00"
+                        android:textColor="@color/black"
+                        android:textSize="16sp" />
+                </LinearLayout>
+
+                <!-- Total -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:paddingVertical="8dp">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Total:"
+                        android:textColor="@color/black"
+                        android:textSize="18sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/totalAmount"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="$0.00"
+                        android:textColor="@color/black"
+                        android:textSize="18sp"
+                        android:textStyle="bold" />
+                </LinearLayout>
 
             </LinearLayout>
-        </LinearLayout>
+        </androidx.cardview.widget.CardView>
 
-    </ScrollView>
+        <!-- Checkout Button -->
+        <Button
+            android:id="@+id/checkoutBtn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:backgroundTint="@color/orange"
+            android:text="Proceed to Checkout"
+            android:textAllCaps="false"
+            android:textSize="16sp"
+            android:textColor="@color/white"
+            android:fontFamily="sans-serif-medium"
+            android:elevation="4dp"
+            android:paddingVertical="12dp" />
+
+    </LinearLayout>
 
 </LinearLayout>

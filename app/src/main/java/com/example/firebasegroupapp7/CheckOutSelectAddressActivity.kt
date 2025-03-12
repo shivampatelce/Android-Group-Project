@@ -1,9 +1,11 @@
 package com.example.firebasegroupapp7
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.widget.Button
 import android.widget.EditText
+import android.widget.ImageButton
 import android.widget.LinearLayout
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -28,6 +30,7 @@ class CheckOutSelectAddressActivity : AppCompatActivity() {
     private lateinit var province: EditText
     private lateinit var postalCode: EditText
     private lateinit var addNewAddressBtn: Button
+    private lateinit var backButton: ImageButton
     private var totalBillingAmount: Long = 0
     private lateinit var cartList: ArrayList<Cart>
 
@@ -49,6 +52,7 @@ class CheckOutSelectAddressActivity : AppCompatActivity() {
         province = findViewById(R.id.provinceText)
         postalCode = findViewById(R.id.postalCode)
         addNewAddressBtn = findViewById(R.id.addAddress)
+        backButton = findViewById(R.id.backButton)
 
         totalBillingAmount = intent.getLongExtra("totalBillingAmount", -1)
         cartList = intent.getSerializableExtra("cartItems") as ArrayList<Cart>
@@ -70,6 +74,10 @@ class CheckOutSelectAddressActivity : AppCompatActivity() {
             if (isFormValid(streetAddressInput, cityInput, provinceInput, postalCodeInput)) {
                 addAddress(streetAddressInput, cityInput, provinceInput, postalCodeInput)
             }
+        }
+
+        backButton.setOnClickListener {
+            startActivity(Intent(this, CartActivity::class.java))
         }
     }
 

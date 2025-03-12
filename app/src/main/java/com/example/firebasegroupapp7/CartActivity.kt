@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.widget.Button
+import android.widget.ImageButton
 import android.widget.ScrollView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
@@ -28,7 +29,8 @@ class CartActivity : AppCompatActivity() {
     private lateinit var taxText: TextView
     private lateinit var totalAmountText: TextView
     private lateinit var emptyCartView: ConstraintLayout
-    private lateinit var cartListView: ScrollView
+    private lateinit var cartListView: RecyclerView
+    private lateinit var backButton: ImageButton
     private var totalBillingAmount: Long = 0
     private var cartList = arrayListOf<Cart>()
     private lateinit var currentUser: FirebaseUser
@@ -49,7 +51,8 @@ class CartActivity : AppCompatActivity() {
         taxText = findViewById(R.id.taxAmount)
         totalAmountText = findViewById(R.id.totalAmount)
         emptyCartView = findViewById(R.id.emptyCart)
-        cartListView = findViewById(R.id.cartListView)
+        cartListView = findViewById(R.id.cartRecyclerView)
+        backButton = findViewById(R.id.backButton)
 
         checkoutBtn.setOnClickListener {
             if (totalBillingAmount != 0L) {
@@ -69,6 +72,10 @@ class CartActivity : AppCompatActivity() {
         recyclerView.adapter = adapter
 
         updateCart()
+
+        backButton.setOnClickListener {
+            finish()
+        }
     }
 
     fun updateCart() {
@@ -134,7 +141,7 @@ class CartActivity : AppCompatActivity() {
             }
         }
 
-        tax = (subtotal * 0.05).toLong()
+        tax = (subtotal * 0.13).toLong()
         totalBillingAmount = subtotal + tax
 
         subtotalText.setText("$ " + subtotal.toString())

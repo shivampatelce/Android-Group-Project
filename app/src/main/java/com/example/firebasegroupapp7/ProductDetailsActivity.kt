@@ -1,8 +1,10 @@
 package com.example.firebasegroupapp7
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.widget.Button
+import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
@@ -32,6 +34,8 @@ class ProductDetailsActivity : AppCompatActivity() {
     private lateinit var addToCartButton: Button
     private lateinit var removeFromCart: Button
     private lateinit var quantityContainer: LinearLayout
+    private lateinit var backButton: ImageButton
+    private lateinit var goToCartButton: ImageButton
     private var productId: Long? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -56,6 +60,8 @@ class ProductDetailsActivity : AppCompatActivity() {
         addToCartButton = findViewById(R.id.addToCart)
         removeFromCart = findViewById(R.id.removeFromCart)
         quantityContainer = findViewById(R.id.quantityContainer)
+        backButton = findViewById(R.id.backButton)
+        goToCartButton = findViewById(R.id.goToCartButton)
 
         productId = intent.getLongExtra("productId", -1L)
 
@@ -108,6 +114,14 @@ class ProductDetailsActivity : AppCompatActivity() {
 
         removeFromCart.setOnClickListener {
             removeItemFromCart()
+        }
+
+        backButton.setOnClickListener {
+            startActivity(Intent(this, ProductsListActivity::class.java))
+        }
+
+        goToCartButton.setOnClickListener {
+            startActivity(Intent(this, CartActivity::class.java))
         }
     }
 

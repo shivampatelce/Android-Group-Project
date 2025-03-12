@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
 import android.widget.EditText
+import android.widget.ImageButton
 import android.widget.TextView
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
@@ -27,6 +28,7 @@ class CheckoutCardDetailsActivity : AppCompatActivity() {
     private lateinit var cvv: EditText
     private lateinit var paymentButton: Button
     private lateinit var amountText: TextView
+    private lateinit var backButton: ImageButton
     private var totalBillingAmount: Long = 0
     private lateinit var cartList: ArrayList<Cart>
     private lateinit var database: FirebaseDatabase
@@ -55,6 +57,7 @@ class CheckoutCardDetailsActivity : AppCompatActivity() {
         cvv = findViewById(R.id.cvv)
         paymentButton = findViewById(R.id.paymentButton)
         amountText = findViewById(R.id.amount)
+        backButton = findViewById(R.id.backButton)
 
         amountText.setText("$ " + totalBillingAmount.toString())
 
@@ -62,6 +65,10 @@ class CheckoutCardDetailsActivity : AppCompatActivity() {
             if (validateInputs()) {
                 completeOrder(Order(user?.uid!!, cartList, address))
             }
+        }
+
+        backButton.setOnClickListener {
+            startActivity(Intent(this, CheckOutSelectAddressActivity::class.java))
         }
     }
 
