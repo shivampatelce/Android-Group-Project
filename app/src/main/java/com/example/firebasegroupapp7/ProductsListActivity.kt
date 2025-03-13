@@ -4,7 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.widget.ImageButton
 import androidx.appcompat.app.AppCompatActivity
-import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.firebasegroupapp7.databinding.ProductsListBinding
 import com.firebase.ui.database.FirebaseRecyclerOptions
@@ -56,7 +56,11 @@ class ProductsListActivity : AppCompatActivity() {
         adapter = ProductAdapter(options, FirebaseDatabase.getInstance(), auth.currentUser)
 
         val recyclerView: RecyclerView = findViewById(R.id.recyclerView)
-        recyclerView.layoutManager = LinearLayoutManager(this)
+
+        // Dynamically set the number of columns based on orientation
+        val spanCount = if (resources.configuration.orientation == android.content.res.Configuration.ORIENTATION_LANDSCAPE) 2 else 1
+
+        recyclerView.layoutManager = GridLayoutManager(this, spanCount) // Use GridLayoutManager
         recyclerView.adapter = adapter
     }
 

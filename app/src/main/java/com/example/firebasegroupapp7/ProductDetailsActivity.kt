@@ -52,7 +52,7 @@ class ProductDetailsActivity : AppCompatActivity() {
         productImg = findViewById(R.id.productImg)
         productTitle = findViewById(R.id.productTitle)
         productDescription = findViewById(R.id.productDescription)
-        itemDetails = findViewById(R.id.itemDetails)
+        itemDetails = findViewById(R.id.itemsDetails)
         productPrice = findViewById(R.id.productPrice)
         cartQuantity = findViewById(R.id.quantity)
         incrementButton = findViewById(R.id.increaseQnt)
