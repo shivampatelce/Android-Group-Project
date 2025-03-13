@@ -74,7 +74,7 @@ class CartActivity : AppCompatActivity() {
         updateCart()
 
         backButton.setOnClickListener {
-            finish()
+            startActivity(Intent(this, ProductsListActivity::class.java))
         }
     }
 
